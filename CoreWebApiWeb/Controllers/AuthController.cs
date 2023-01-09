@@ -67,7 +67,8 @@ namespace CoreWebApiWeb.Controllers
         string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim> { 
-                new Claim(ClaimTypes.Name, user.Name)
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, "Admin")
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 configuration.GetSection("SToken:tok").Value));
