@@ -1,4 +1,6 @@
 ﻿using CoreWebApiWeb.Models;
+using CoreWebApiWeb.Services.UsersService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -16,10 +18,22 @@ namespace CoreWebApiWeb.Controllers
     {
         public static User user = new User();
         private readonly IConfiguration configuration;
+        private readonly IUserService userService;
 
-        public AuthController(IConfiguration configuration) {
+        public AuthController(IConfiguration configuration, IUserService userService) {
             this.configuration = configuration;
+            this.userService = userService;
         }
+        
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMe()
+        {
+            var name = userService.GetName();
+            return Ok(name);
+
+/*            var claim = User.FindFirstValue(ClaimTypes.Role);
+            return Ok(new { name, claim });
+*/        }
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDTO dto)
